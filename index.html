@@ -1,9 +1,11 @@
-<!DOCTYPE html>
+            <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Sirajia Milk Shop - Premium Dairy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Sirajia Milk Shop - Bill as Picture</title>
+    <!-- html2canvas library for image capture -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,170 +14,100 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a2e1a 0%, #1a472a 50%, #0d2818 100%);
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a472a 0%, #0e2a1a 100%);
+            padding: 20px;
             position: relative;
             overflow-x: hidden;
-            padding: 15px;
         }
 
-        /* ========= BUBBLES ANIMATION ========= */
-        .bubbles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
+        /* Floating Bubbles */
         .bubble {
-            position: absolute;
-            bottom: -100px;
-            background: radial-gradient(circle, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+            position: fixed;
+            background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
             border-radius: 50%;
-            animation: rise 8s infinite ease-in;
             pointer-events: none;
+            z-index: 0;
+            animation: floatBubble 12s infinite ease-in-out;
         }
 
-        @keyframes rise {
-            0% {
-                bottom: -100px;
-                transform: translateX(0);
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                bottom: 100%;
-                transform: translateX(40px);
-                opacity: 0;
-            }
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
         }
 
-        /* ========= SPLASH SCREEN ========= */
-        .splash-screen {
+        /* Main Container */
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Splash Screen */
+        .splash {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(145deg, #f39c12, #e67e22, #d35400);
-            z-index: 2000;
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            animation: fadeOut 0.5s ease-in-out 3s forwards;
+            animation: splashFade 3.5s forwards;
         }
 
-        @keyframes fadeOut {
-            from { opacity: 1; visibility: visible; }
-            to { opacity: 0; visibility: hidden; display: none; }
+        @keyframes splashFade {
+            0% { opacity: 1; visibility: visible; }
+            80% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; display: none; }
         }
 
         .splash-bottle {
-            font-size: 130px;
-            animation: splashFlip 1s ease-in-out;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4));
+            font-size: 120px;
+            animation: bottleSpin 1s ease-in-out;
         }
 
-        @keyframes splashFlip {
-            0% { transform: rotateY(0deg) scale(0.5); opacity: 0; }
-            30% { transform: rotateY(180deg) scale(1.3); }
-            60% { transform: rotateY(360deg) scale(1.1); }
-            100% { transform: rotateY(720deg) scale(1); opacity: 1; }
+        @keyframes bottleSpin {
+            0% { transform: rotateY(0deg) scale(0.3); opacity: 0; }
+            50% { transform: rotateY(180deg) scale(1.3); }
+            100% { transform: rotateY(360deg) scale(1); opacity: 1; }
         }
 
         .splash-title {
-            font-size: 38px;
+            font-size: 36px;
             font-weight: 900;
             color: white;
-            text-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.3);
             margin-top: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #FFF8E7, #FFE0B5);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .loading-bar {
-            width: 220px;
-            height: 5px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-            margin-top: 30px;
-            overflow: hidden;
-        }
-
-        .loading-fill {
-            width: 0%;
-            height: 100%;
-            background: white;
-            animation: loading 3s linear forwards;
-        }
-
-        @keyframes loading {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        /* ========= MAIN CONTENT ========= */
-        .main-content {
-            opacity: 0;
-            animation: contentFadeIn 0.6s ease-in-out 3.2s forwards;
-            max-width: 500px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        @keyframes contentFadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Cards */
         .card {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(5px);
-            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 35px;
             padding: 20px;
             margin-bottom: 18px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            border: 1px solid rgba(243, 156, 18, 0.3);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            backdrop-filter: blur(3px);
         }
 
         /* Header */
         .header-card {
-            background: linear-gradient(135deg, #e67e22, #d35400);
+            background: linear-gradient(135deg, #f39c12, #e67e22);
             color: white;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .header-card::before {
-            content: "🥛";
-            position: absolute;
-            font-size: 100px;
-            opacity: 0.1;
-            bottom: -20px;
-            right: -20px;
-        }
-
         .header-card h1 {
-            font-size: 26px;
+            font-size: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -186,33 +118,23 @@
         .bottle-icon {
             font-size: 45px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: 0.2s;
         }
 
         .bottle-icon:active {
             transform: scale(0.9);
         }
 
-        @keyframes bottleFlip {
+        @keyframes flipAnim {
             0% { transform: rotateY(0deg); }
             100% { transform: rotateY(360deg); }
         }
 
-        .flip-animation {
-            animation: bottleFlip 0.5s ease-in-out;
+        .flip {
+            animation: flipAnim 0.5s ease-in-out;
         }
 
-        /* Customer */
-        .customer-label {
-            font-weight: 800;
-            color: #d35400;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
+        /* Customer Input */
         .customer-input {
             width: 100%;
             padding: 14px 18px;
@@ -220,13 +142,6 @@
             border-radius: 50px;
             font-size: 16px;
             background: white;
-            transition: 0.2s;
-        }
-
-        .customer-input:focus {
-            border-color: #e67e22;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(230,126,34,0.2);
         }
 
         /* Items */
@@ -239,49 +154,16 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            border-left: 6px solid #f39c12;
+            gap: 8px;
+            border-left: 5px solid #f39c12;
         }
 
-        .item-name {
-            font-weight: 800;
-            color: #2c3e2a;
-            min-width: 100px;
-            font-size: 14px;
-        }
+        .item-name { font-weight: 800; color: #2c3e2a; min-width: 95px; font-size: 14px; }
+        .item-qty input { width: 75px; padding: 8px; border-radius: 30px; border: 1px solid #f39c12; text-align: center; }
+        .item-price { font-weight: 700; color: #e67e22; font-size: 12px; }
+        .item-total { font-weight: 800; color: #27ae60; font-size: 13px; }
+        .remove-btn { background: #ffddd3; border: none; padding: 8px 12px; border-radius: 50%; color: #e74c3c; cursor: pointer; }
 
-        .item-qty input {
-            width: 80px;
-            padding: 8px;
-            border-radius: 30px;
-            border: 1px solid #f39c12;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .item-price {
-            font-weight: 700;
-            color: #e67e22;
-            font-size: 13px;
-        }
-
-        .item-total {
-            font-weight: 800;
-            color: #27ae60;
-            font-size: 14px;
-        }
-
-        .remove-btn {
-            background: #ffddd3;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 50%;
-            color: #e74c3c;
-        }
-
-        /* Buttons */
         .btn-add {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
             border: none;
@@ -290,199 +172,252 @@
             font-weight: 800;
             color: white;
             width: 100%;
-            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            cursor: pointer;
         }
 
         .total-card {
             background: linear-gradient(135deg, #1a472a, #0e2a1a);
             color: #FFE6B0;
             text-align: center;
-            padding: 20px;
             border-radius: 30px;
+            padding: 20px;
         }
 
         .total-amount {
-            font-size: 44px;
+            font-size: 48px;
             font-weight: 900;
             color: #f39c12;
-            margin: 10px 0;
         }
 
         .btn-group {
             display: flex;
             gap: 12px;
+        }
+
+        .btn-primary, .btn-download-img {
+            flex: 1;
+            padding: 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .btn-download-img { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+        /* BILL CARD - This will be captured as IMAGE */
+        .bill-card {
+            background: linear-gradient(145deg, #fffef7, #fff8ed);
+            border-radius: 30px;
+            padding: 25px;
+            margin-top: 15px;
+            border: 2px solid #f39c12;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .bill-header {
+            text-align: center;
+            border-bottom: 2px dashed #f39c12;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .bill-header h2 {
+            font-size: 28px;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .bill-header p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .bill-customer {
+            background: #fef3e2;
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .bill-items {
+            margin-bottom: 15px;
+        }
+
+        .bill-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ffe0b5;
+            font-size: 13px;
+        }
+
+        .bill-total {
+            background: linear-gradient(135deg, #1a472a, #0e2a1a);
+            color: #f39c12;
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .bill-total h3 {
+            font-size: 32px;
             margin-top: 5px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border: none;
-            padding: 14px;
-            border-radius: 50px;
-            font-weight: 700;
-            color: white;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .btn-download {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            border: none;
-            padding: 14px;
-            border-radius: 50px;
-            font-weight: 700;
-            color: white;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        /* Bill Preview - Mobile Friendly Scroll */
-        .bill-preview {
-            background: #0a0e1a;
-            border-radius: 20px;
-            padding: 15px;
-            font-family: 'Courier New', monospace;
+        .bill-footer {
+            text-align: center;
+            margin-top: 20px;
             font-size: 11px;
-            color: #00ffaa;
-            max-height: 320px;
-            overflow-y: auto;
-            margin-top: 15px;
-            -webkit-overflow-scrolling: touch;
+            color: #888;
+            border-top: 1px dashed #f39c12;
+            padding-top: 15px;
         }
 
-        .bill-preview pre {
-            white-space: pre-wrap;
-            word-break: break-word;
-            font-family: monospace;
-            margin: 0;
-            font-size: 10px;
-            line-height: 1.4;
-        }
-
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: #f39c12;
-            color: #2c3e2a;
-            padding: 12px 24px;
+            background: #27ae60;
+            color: white;
+            padding: 12px 20px;
             border-radius: 50px;
-            font-weight: bold;
-            z-index: 3000;
-            animation: toastAnim 1.5s ease-in-out;
-            white-space: nowrap;
+            z-index: 9999;
+            animation: toastFade 2s ease;
         }
 
-        @keyframes toastAnim {
+        @keyframes toastFade {
             0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
             20% { opacity: 1; transform: translateX(-50%) translateY(0); }
             80% { opacity: 1; }
             100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         }
 
-        audio {
-            display: none;
-        }
-
-        @media (max-width: 480px) {
-            .total-amount { font-size: 36px; }
-            .header-card h1 { font-size: 22px; }
-            .bottle-icon { font-size: 35px; }
-        }
+        audio { display: none; }
     </style>
 </head>
 <body>
 
-<!-- BUBBLES BACKGROUND -->
-<div class="bubbles" id="bubbles"></div>
+<!-- Generate Bubbles -->
+<script>
+    for(let i = 0; i < 30; i++) {
+        let bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        let size = Math.random() * 60 + 20;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = Math.random() * 100 + '%';
+        bubble.style.animationDelay = Math.random() * 10 + 's';
+        bubble.style.animationDuration = Math.random() * 8 + 8 + 's';
+        document.body.appendChild(bubble);
+    }
+</script>
 
-<!-- SPLASH SCREEN -->
-<div class="splash-screen" id="splashScreen">
+<!-- SPLASH -->
+<div class="splash" id="splash">
     <div class="splash-bottle">🥛</div>
     <div class="splash-title">SIRAJIA MILK SHOP</div>
-    <div class="splash-sub" style="color:white; margin-top:10px;">Premium Dairy • Fresh Daily</div>
-    <div class="loading-bar"><div class="loading-fill"></div></div>
+    <div style="color:white; margin-top:10px;">Premium Dairy • Pakistan</div>
+    <div style="width:200px; height:3px; background:rgba(255,255,255,0.3); margin-top:30px; border-radius:5px; overflow:hidden;">
+        <div style="width:0%; height:100%; background:white; animation:loading 3s linear;"></div>
+    </div>
+    <style>
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
 </div>
 
-<!-- MAIN CONTENT -->
-<div class="main-content" id="mainContent">
-    
+<div class="container" id="mainContent" style="opacity:0; animation: fadeIn 0.5s 3.2s forwards;">
+    <style>
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+
+    <!-- Header -->
     <div class="card header-card">
         <h1>
-            <span class="bottle-icon" id="flipBottle1">🥛</span>
+            <span class="bottle-icon" id="bottle1">🥛</span>
             Sirajia Milk
-            <span class="bottle-icon" id="flipBottle2">🥛</span>
+            <span class="bottle-icon" id="bottle2">🥛</span>
         </h1>
-        <div style="font-size:12px; margin-top:8px;">🇵🇰 Pakistani Rupee (PKR) • Monthly Billing 🇵🇰</div>
+        <div>🇵🇰 Fresh Daily • Monthly Billing 🇵🇰</div>
     </div>
 
+    <!-- Customer -->
     <div class="card">
-        <div class="customer-label">
-            👤 Customer Name
-        </div>
-        <input type="text" id="customerName" class="customer-input" placeholder="Enter customer name" value="Muhammad Hassan">
+        <label style="font-weight:800; color:#d35400;">👤 Customer Name</label>
+        <input type="text" id="customerName" class="customer-input" value="Muhammad Hassan" placeholder="Enter name">
     </div>
 
+    <!-- Items -->
     <div class="card">
-        <h3 style="color:#d35400; margin-bottom:15px;">🛒 Monthly Items</h3>
-        <div id="itemsContainer"></div>
-        <button class="btn-add" id="addItemBtn">➕ Add New Item</button>
+        <h3 style="color:#d35400; margin-bottom:15px;">🛒 Items</h3>
+        <div id="itemsList"></div>
+        <button class="btn-add" id="addBtn">➕ Add Item</button>
     </div>
 
+    <!-- Total -->
     <div class="card total-card">
-        <div>📋 MONTHLY BILL TOTAL</div>
-        <div class="total-amount" id="grandTotal">PKR 0</div>
-        <div style="font-size:11px;">* All prices in Pakistani Rupee</div>
+        <div>📋 MONTHLY TOTAL</div>
+        <div class="total-amount" id="totalAmount">PKR 0</div>
     </div>
 
+    <!-- Buttons -->
     <div class="btn-group">
-        <button class="btn-primary" id="refreshBtn">🔄 Generate Bill</button>
-        <button class="btn-download" id="downloadBtn">💾 Download Bill</button>
+        <button class="btn-primary" id="refreshBtn">🔄 Refresh Bill</button>
+        <button class="btn-download-img" id="downloadImageBtn">📷 Download as IMAGE</button>
     </div>
 
-    <div class="card bill-preview" id="billPreview">
-        <pre>📋 Click "Generate Bill" to see preview...</pre>
+    <!-- BILL CARD - This will be captured as PNG Image -->
+    <div id="billCaptureArea">
+        <div class="bill-card" id="billCard">
+            <div class="bill-header">
+                <h2>🥛 SIRAJIA MILK SHOP 🥛</h2>
+                <p>Fresh Dairy • Premium Quality • Pakistan</p>
+                <p style="font-size:10px;">Monthly Billing Statement</p>
+            </div>
+            <div class="bill-customer" id="billCustomer">
+                <strong>👤 Customer:</strong> <span id="billCustomerName">Muhammad Hassan</span><br>
+                <strong>📅 Date:</strong> <span id="billDate"></span>
+            </div>
+            <div class="bill-items" id="billItemsList">
+                <!-- Items will appear here -->
+            </div>
+            <div class="bill-total">
+                <span>💰 GRAND TOTAL</span>
+                <h3 id="billTotal">PKR 0</h3>
+            </div>
+            <div class="bill-footer">
+                ⭐ Thank you! Visit Again ⭐<br>
+                🥛 Sirajia Milk Shop - Freshness Guaranteed 🥛
+            </div>
+        </div>
     </div>
 </div>
 
-<audio id="milkAudio">
-    <source src="https://www.soundjay.com/misc/sounds/milk-pouring-01.mp3" type="audio/mpeg">
+<audio id="milkSound">
+    <source src="https://www.soundjay.com/misc/sounds/milk-pouring-01.mp3">
 </audio>
 
 <script>
-    // Generate Bubbles
-    function createBubbles() {
-        const bubblesContainer = document.getElementById('bubbles');
-        for(let i = 0; i < 35; i++) {
-            const bubble = document.createElement('div');
-            bubble.className = 'bubble';
-            const size = Math.random() * 60 + 20;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-            bubble.style.left = Math.random() * 100 + '%';
-            bubble.style.animationDuration = Math.random() * 6 + 5 + 's';
-            bubble.style.animationDelay = Math.random() * 5 + 's';
-            bubble.style.opacity = Math.random() * 0.5 + 0.2;
-            bubblesContainer.appendChild(bubble);
-        }
-    }
-    createBubbles();
-
-    // Pakistani Rupee Items
     let products = [
         { id: 1, name: "🥛 Fresh Milk", price: 180, qty: 2.5, unit: "kg" },
         { id: 2, name: "🍶 Thick Yoghurt", price: 140, qty: 1, unit: "kg" },
@@ -490,180 +425,144 @@
     ];
     let nextId = 4;
 
-    function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerText = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 1500);
+    function showMsg(msg) {
+        let t = document.createElement('div');
+        t.className = 'toast';
+        t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2000);
     }
 
-    function playMilkFlip() {
-        const bottles = document.querySelectorAll('.bottle-icon');
-        bottles.forEach(b => {
-            b.classList.remove('flip-animation');
-            setTimeout(() => b.classList.add('flip-animation'), 10);
+    function playFlip() {
+        document.querySelectorAll('.bottle-icon').forEach(b => {
+            b.classList.remove('flip');
+            setTimeout(() => b.classList.add('flip'), 10);
         });
-        const audio = document.getElementById('milkAudio');
-        if(audio) {
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log("Tap first"));
-        }
-        showToast("🥛 Milkshake Flip! 🥛");
+        let audio = document.getElementById('milkSound');
+        if(audio) audio.play().catch(e => {});
     }
 
     function renderItems() {
-        const container = document.getElementById('itemsContainer');
+        let container = document.getElementById('itemsList');
         if(!container) return;
         container.innerHTML = '';
-        
-        products.forEach(item => {
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-                <div class="item-name">${item.name}</div>
-                <div class="item-qty"><input type="number" id="qty_${item.id}" value="${item.qty}" step="${item.name.includes('Eggs')?'1':'0.5'}" style="width:75px"></div>
-                <div class="item-price">PKR ${item.price}/${item.unit}</div>
-                <div class="item-total" id="total_${item.id}">PKR 0</div>
-                <button class="remove-btn" onclick="removeItem(${item.id})">🗑</button>
+        products.forEach(p => {
+            let div = document.createElement('div');
+            div.className = 'item-row';
+            div.innerHTML = `
+                <div class="item-name">${p.name}</div>
+                <div class="item-qty"><input type="number" id="qty_${p.id}" value="${p.qty}" step="${p.name.includes('Eggs')?'1':'0.5'}" style="width:70px"></div>
+                <div class="item-price">PKR ${p.price}/${p.unit}</div>
+                <div class="item-total" id="total_${p.id}">PKR 0</div>
+                <button class="remove-btn" onclick="removeItem(${p.id})">🗑</button>
             `;
-            container.appendChild(row);
-            
-            const qtyInput = document.getElementById(`qty_${item.id}`);
-            if(qtyInput) {
-                qtyInput.addEventListener('change', function() {
-                    item.qty = parseFloat(this.value) || 0;
-                    calculateAll();
-                    renderItems();
-                });
-            }
+            container.appendChild(div);
+            let inp = document.getElementById(`qty_${p.id}`);
+            if(inp) inp.addEventListener('change', function() { p.qty = parseFloat(this.value) || 0; updateAll(); renderItems(); });
         });
-        calculateAll();
+        updateAll();
     }
 
-    function calculateAll() {
-        let grandTotal = 0;
-        products.forEach(item => {
-            const total = item.qty * item.price;
-            grandTotal += total;
-            const totalSpan = document.getElementById(`total_${item.id}`);
-            if(totalSpan) totalSpan.innerText = `PKR ${total.toFixed(2)}`;
+    function updateAll() {
+        let total = 0;
+        products.forEach(p => {
+            let t = p.qty * p.price;
+            total += t;
+            let span = document.getElementById(`total_${p.id}`);
+            if(span) span.innerText = `PKR ${t.toFixed(2)}`;
         });
-        document.getElementById('grandTotal').innerHTML = `PKR ${grandTotal.toFixed(2)}`;
-        generateBillPreview();
+        document.getElementById('totalAmount').innerHTML = `PKR ${total.toFixed(2)}`;
+        updateBillCard();
     }
 
     function removeItem(id) {
-        if(products.length <= 1) {
-            alert("At least one item required!");
-            return;
-        }
+        if(products.length <= 1) { alert("At least one item needed!"); return; }
         products = products.filter(p => p.id !== id);
         renderItems();
-        showToast("🗑 Item removed");
     }
 
-    function addNewItem() {
-        let name = prompt("Enter item name:", "🧀 Paneer");
+    function addItem() {
+        let name = prompt("Item name:", "🧀 Paneer");
         if(!name) name = "New Item";
-        let price = parseFloat(prompt("Enter price (PKR):", "200"));
+        let price = parseFloat(prompt("Price (PKR):", "200"));
         if(isNaN(price)) price = 200;
-        let unit = prompt("Unit (kg/litre/pcs):", "kg");
+        let unit = prompt("Unit:", "kg");
         if(!unit) unit = "unit";
         let qty = parseFloat(prompt("Quantity:", "1"));
         if(isNaN(qty)) qty = 1;
-        
         products.push({ id: nextId++, name: name, price: price, qty: qty, unit: unit });
         renderItems();
-        showToast("➕ Item added!");
+        showMsg("✅ Item added!");
     }
 
-    function generateBillPreview() {
-        const customer = document.getElementById('customerName').value || "Valued Customer";
-        const date = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' });
+    function updateBillCard() {
+        let customer = document.getElementById('customerName').value || "Customer";
+        let date = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' });
+        document.getElementById('billCustomerName').innerText = customer;
+        document.getElementById('billDate').innerText = date;
+        
+        let itemsHtml = '';
         let total = 0;
-        let itemsText = '';
-        
-        products.forEach(item => {
-            const itemTotal = item.qty * item.price;
+        products.forEach(p => {
+            let itemTotal = p.qty * p.price;
             total += itemTotal;
-            itemsText += `${item.name} | ${item.qty} ${item.unit} × PKR ${item.price} = PKR ${itemTotal.toFixed(2)}\n`;
+            itemsHtml += `
+                <div class="bill-item-row">
+                    <span><strong>${p.name}</strong> (${p.qty} ${p.unit} × PKR ${p.price})</span>
+                    <span><strong>PKR ${itemTotal.toFixed(2)}</strong></span>
+                </div>
+            `;
         });
-        
-        const bill = `╔════════════════════════════════════════════╗
-║       🥛 SIRAJIA MILK SHOP 🥛            ║
-║     🇵🇰 Premium Dairy - Pakistan 🇵🇰       ║
-╠════════════════════════════════════════════╣
-║ Customer : ${customer.padEnd(32)}║
-║ Date     : ${date.substring(0,28).padEnd(32)}║
-╠════════════════════════════════════════════╣
-║ ITEMS DETAILS                             ║
-${itemsText.split('\n').map(line => '║ ' + line.padEnd(38) + '║').join('\n')}
-╠════════════════════════════════════════════╣
-║ GRAND TOTAL : PKR ${total.toFixed(2).padStart(10)}              ║
-╚════════════════════════════════════════════╝
-✨ Shukriya! Sirajia Milk Shop - Fresh Daily ✨`;
-        
-        document.getElementById('billPreview').innerHTML = `<pre>${bill}</pre>`;
+        document.getElementById('billItemsList').innerHTML = itemsHtml;
+        document.getElementById('billTotal').innerHTML = `PKR ${total.toFixed(2)}`;
     }
 
-    function downloadBill() {
-        const customer = document.getElementById('customerName').value || "Customer";
-        const date = new Date().toLocaleString('en-PK');
-        let total = 0;
-        let itemsText = '';
+    // DOWNLOAD BILL AS IMAGE - Mobile Friendly
+    async function downloadBillAsImage() {
+        showMsg("📸 Generating bill image...");
+        const element = document.getElementById('billCard');
         
-        products.forEach(item => {
-            const itemTotal = item.qty * item.price;
-            total += itemTotal;
-            itemsText += `${item.name} | ${item.qty} ${item.unit} × PKR ${item.price} = PKR ${itemTotal.toFixed(2)}\n`;
-        });
-        
-        const bill = `
-========================================
-       SIRAJIA MILK SHOP
-    🇵🇰 Monthly Bill (PKR) 🇵🇰
-========================================
-Customer: ${customer}
-Date: ${date}
-----------------------------------------
-ITEMS:
-${itemsText}
-----------------------------------------
-GRAND TOTAL: PKR ${total.toFixed(2)}
-========================================
-✨ Thank you! Visit Again ✨
-        `;
-        
-        // Mobile-friendly download
-        const blob = new Blob([bill], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Sirajia_Bill_${customer.replace(/\s/g, '_')}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showToast("✅ Bill Downloaded!");
+        try {
+            const canvas = await html2canvas(element, {
+                scale: 2.5,
+                backgroundColor: '#fffef7',
+                logging: false,
+                useCORS: true,
+                allowTaint: false
+            });
+            
+            // Convert to download link
+            const image = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            const customer = document.getElementById('customerName').value || "Customer";
+            const filename = `Sirajia_Bill_${customer.replace(/\s/g, '_')}.png`;
+            link.download = filename;
+            link.href = image;
+            link.click();
+            
+            showMsg("✅ Bill saved as IMAGE! Ready to share on WhatsApp!");
+        } catch(err) {
+            console.error(err);
+            showMsg("⚠️ Try again! Tap image button once more.");
+        }
     }
 
     // Event Listeners
-    document.getElementById('flipBottle1')?.addEventListener('click', playMilkFlip);
-    document.getElementById('flipBottle2')?.addEventListener('click', playMilkFlip);
-    document.getElementById('addItemBtn')?.addEventListener('click', addNewItem);
-    document.getElementById('refreshBtn')?.addEventListener('click', () => { calculateAll(); showToast("🔄 Bill Refreshed!"); });
-    document.getElementById('downloadBtn')?.addEventListener('click', downloadBill);
-    document.getElementById('customerName')?.addEventListener('input', generateBillPreview);
-
-    // Initial render
+    document.getElementById('bottle1')?.addEventListener('click', playFlip);
+    document.getElementById('bottle2')?.addEventListener('click', playFlip);
+    document.getElementById('addBtn')?.addEventListener('click', addItem);
+    document.getElementById('refreshBtn')?.addEventListener('click', () => { updateAll(); showMsg("🔄 Bill updated!"); });
+    document.getElementById('downloadImageBtn')?.addEventListener('click', downloadBillAsImage);
+    document.getElementById('customerName')?.addEventListener('input', updateBillCard);
+    
     renderItems();
-
-    // Hide splash
+    updateBillCard();
+    
+    // Hide splash after 3.5 sec
     setTimeout(() => {
-        const splash = document.getElementById('splashScreen');
+        let splash = document.getElementById('splash');
         if(splash) splash.style.display = 'none';
     }, 3500);
 </script>
 </body>
-</html>
+    </html>
